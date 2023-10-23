@@ -57,3 +57,14 @@ footer .bi:hover {
 .app-logo {
     max-width: 400px;
 }
+
+.btn-outline-primary {
+    color: var(--nl-secondary-color);
+    border: var(--nl-primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--nl-primary-color);
+    color: var(--nl-secondary-color);
+    border: 0;
+}

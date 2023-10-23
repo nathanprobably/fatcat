@@ -1,0 +1,17 @@
+:root {
+    --nl-primary-color: #105458; /*theme 100 or 200*/
+    --nl-secondary-color: #5fa43c; /*theme core or 500 or 600*/
+    --nl-light-color: #dfe3e4;
+    --nl-dark-color: #1b1b1b;
+}
+
+.btn-primary{
+    background-color: var(--nl-primary-color);
+    color: var(--nl-secondary-color);
+}
+
+.btn-primary:hover {
+    background: var(--nl-secondary-color);
+    color: var(--nl-primary-color);
+}
+

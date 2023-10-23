@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APP NAME: A Coding Challenge</title>
+    <title>FatCat: A Coding Challenge</title>
 
     <!--Bootstrap CSS-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,6 +18,7 @@
 
     <!--My CSS-->
     <link href="/CSS/site.css" rel="stylesheet" />
+    <link href="/CSS/app.css" rel="stylesheet" />
 
     <!--Favicon-->
     <link rel="shortcut icon" href="/img/WhiteLogoNoName.png" type="image/x-icon" />
@@ -29,7 +30,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/index.html">
                 <img src="/IMG/WhiteLogoNoName.png" height="30" />
-                APP NAME
+                FatCat
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -67,12 +68,85 @@
     </nav>
 
     <main class="container py-3">
-        <h1>APP UI GOES HERE</h1>
+        <h1 class="text-center">FatCat Loan Calculator</h1>
+        <p><!--May put some use info here, not sure--></p>
 
-        <input class="form-control my-3" placeholder="Enter a message" type="text" style="width:10rem" id="message" />
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col col-md-4">
+                <form action="#" class="row row-cols-1 g-3">
+                    <div class="col">
+                        <label class="form-label" for="loanAmount">Loan Amount</label>
+                        <input class="form-control w-50" id="loanAmount" name="loanAmount" type="number"
+                            placeholder="Loan Amount"/>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="loanTerm">Term (Months)</label>
+                        <input class="form-control w-50" id="loanTerm" name="loanTerm" type="number" placeholder="Term" />
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="interestRate">Interest Rate (%)</label>
+                        <input class="form-control w-50" id="interestRate" name="interestRate" type="number" placeholder="Interest Rate" />
+                    </div>
+                    <div class="col-12 text-end">
+                        <button class="btn btn-primary border-0" id="btnSubmit" type="button" onclick="getValues(this)">
+                            Calculate
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-        <button id="btnSubmit" class="btn btn-primary">Display Message</button>
+            <div class="col text-center col-md-8">
+                <h3>Your Monthly Payments:</h3>
+                <h5 id="monthlyPayAmt"></h5>
+                <div class="table-responsive">
+                    <table id="firstTable" class="table mt-2 border-0">
+                        <tbody class="border-top-0">
+                            <tr class=>
+                                <td>Total Principal</td>
+                                <td id="totalPrin">$25,000.00</td>
+                            </tr>
+                            <tr>
+                                <td>Total Interest</td>
+                                <td id="totalInt">$3,306.85</td>
+                            </tr>
+                            <tr>
+                                <td>Total Cost</td>
+                                <td id="totalCost">$28,306.85</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
+        <div class="card mt-3 border-0">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table name="loanData" class="table table-striped border mt-2">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Month</th>
+                                <th>Payment</th>
+                                <th>Principal</th>
+                                <th>Interest</th>
+                                <th>Total Interest</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="currentmonth"></td>
+                                <td id="monthlyPay"></td>
+                                <td id="principal"></td>
+                                <td id="interest"></td>
+                                <td id="totalInterest"></td>
+                                <td id="remainBalance"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
 
 
@@ -110,12 +184,7 @@
     <script src="/JS/site.js"></script>
 
     <script>
-        //get the button on the page and assign it to a variable
-        let button = document.getElementById('btnSubmit');
-
-
-        //tell the button to run our displayMessage function when clicked
-        button.addEventListener('click', displayMessage);
+        
     </script>
 
 </body>
