@@ -1,0 +1,59 @@
+:root {
+    --nl-primary-color: #105458; /*theme 100 or 200*/
+    --nl-secondary-color: #5fa43c; /*theme core or 500 or 600*/
+    --nl-light-color: #dfe3e4;
+    --nl-dark-color: #1b1b1b;
+}
+
+/*#region Sticky footer*/
+/*Sticky Footer*/
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    flex-shrink: 0;
+}
+/*#endregion Sticky footer*/
+
+nav .nav-link:hover {
+    color: var(--nl-secondary-color) !important;
+}
+
+footer, nav.navbar {
+    background-color: var(--nl-primary-color);
+    color: var(--nl-light-color);
+}
+
+footer .bi {
+    font-size: 2rem;
+    padding-left: .5rem;
+    color: var(--nl-light-color);
+    transition: color 0.15s ease-in;
+}
+
+footer .bi:hover {
+    color: var(--nl-secondary-color);
+}
+
+.devicons {
+    font-size: 3rem;
+}
+
+.bi-check-square-fill {
+    color: var(--nl-secondary-color);
+}
+
+.app-logo {
+    max-width: 400px;
+}
