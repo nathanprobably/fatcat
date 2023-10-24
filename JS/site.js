@@ -13,8 +13,8 @@ function getValues() {
     interestRate = parseFloat(interestRate);
 
     //validate the values
-    if (isNaN(loanAmount) || isNaN(loanTerm) ||isNaN(interestRate)
-    || loanAmount <= 0 || loanTerm <=0 || interestRate < 0) {
+    if (isNaN(loanAmount) || isNaN(loanTerm) || isNaN(interestRate)
+        || loanAmount <= 0 || loanTerm <= 0 || interestRate < 0) {
         Swal.fire({
             icon: `error`,
             backdrop: false,
@@ -93,7 +93,7 @@ function paymentCalc(loanAmount, loanTerm, interestRate) {
 
 //creat a table from the template and display the accurate information
 function displayLoanData(loan) {
-let payStuffVar = loan.loan;
+    let payStuffVar = loan.loan;
 
     const loanDataBody = document.getElementById('loanDataBody');
 
@@ -109,48 +109,48 @@ let payStuffVar = loan.loan;
         tableRow.appendChild(month);
 
         let monthlyPay = document.createElement('td');
-        monthlyPay.innerHTML = 
-        loanInfo.monthlyPay.toLocaleString(`en-us`, { //<--entering this in the LocaleString rounds the number to two decimal places and displays it as a currency value on the page
-            style: 'currency',
-            currency: 'USD'
-        });
+        monthlyPay.innerHTML =
+            loanInfo.monthlyPay.toLocaleString(`en-us`, { //<--entering this in the LocaleString rounds the number to two decimal places and displays it as a currency value on the page
+                style: 'currency',
+                currency: 'USD'
+            });
         tableRow.appendChild(monthlyPay);
 
         let principal = document.createElement('td');
-        principal.innerHTML = 
-        loanInfo.principal.toLocaleString(`en-us`, {
-            style: 'currency',
-            currency: 'USD'
-        });
+        principal.innerHTML =
+            loanInfo.principal.toLocaleString(`en-us`, {
+                style: 'currency',
+                currency: 'USD'
+            });
         tableRow.appendChild(principal);
 
         let interest = document.createElement('td');
-        interest.innerHTML = 
-        loanInfo.interest.toLocaleString(`en-us`, {
-            style: 'currency',
-            currency: 'USD'
-        });
+        interest.innerHTML =
+            loanInfo.interest.toLocaleString(`en-us`, {
+                style: 'currency',
+                currency: 'USD'
+            });
         tableRow.appendChild(interest);
 
         let totalInterest = document.createElement('td');
-        totalInterest.innerHTML = 
-        loanInfo.totalInt.toLocaleString(`en-us`, {
-            style: 'currency',
-            currency: 'USD'
-        });
+        totalInterest.innerHTML =
+            loanInfo.totalInt.toLocaleString(`en-us`, {
+                style: 'currency',
+                currency: 'USD'
+            });
         tableRow.appendChild(totalInterest);
 
         let remainBalance = document.createElement('td');
-        remainBalance.innerHTML = 
-        loanInfo.balance.toLocaleString(`en-us`, {
-            style: 'currency',
-            currency: 'USD'
-        });
+        remainBalance.innerHTML =
+            Math.abs(loanInfo.balance).toLocaleString(`en-us`, {
+                style: 'currency',
+                currency: 'USD'
+            });
         tableRow.appendChild(remainBalance);
 
         loanDataBody.appendChild(tableRow);//<--take all the rows and populate the tbody by appendChild, pushing the rows into the id of the table body
     }
-    
+
 }
 
 //display the summary in the top right of the page in the summary section
@@ -158,30 +158,30 @@ function displaySummaryInfo(loan) {
     let summary = loan.finalSummary;
 
     let monthlyPayAmt = document.getElementById('monthlyPayAmt');
-    monthlyPayAmt.innerText = 
-    summary.monthlyPay.toLocaleString(`en-us`, {
-        style: 'currency',
-        currency: 'USD'
-    });
+    monthlyPayAmt.innerText =
+        summary.monthlyPay.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
 
     let totalPrin = document.getElementById('totalPrin');
-    totalPrin.innerText = 
-    summary.totalPrin.toLocaleString(`en-us`, {
-        style: 'currency',
-        currency: 'USD'
-    });
+    totalPrin.innerText =
+        summary.totalPrin.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
 
     let totalInterest = document.getElementById('totalInterest');
-    totalInterest.innerText = 
-    summary.totalInt.toLocaleString(`en-us`, {
-        style: 'currency',
-        currency: 'USD'
-    });
+    totalInterest.innerText =
+        summary.totalInt.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
 
     let totalCost = document.getElementById('totalCost');
-    totalCost.innerText = 
-    summary.fullLoanAmount.toLocaleString(`en-us`, {
-        style: 'currency',
-        currency: 'USD'
-    });
+    totalCost.innerText =
+        summary.fullLoanAmount.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
 }
