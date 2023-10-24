@@ -72,10 +72,10 @@
         <p><!--May put some use info here, not sure--></p>
 
         <div class="row row-cols-1 row-cols-md-2">
-            <div class="col col-md-4">
-                <form action="#" class="row row-cols-1 g-3">
+            <div class="col col-md-4 text-center">
+                <form id="newLoanForm" action="#" class="row row-cols-1 g-3">
                     <div class="col">
-                        <label class="form-label" for="loanAmount">Loan Amount</label>
+                        <label class="form-label" for="loanAmount">Loan Amount ($)</label>
                         <input class="form-control w-50" id="loanAmount" name="loanAmount" type="number"
                             placeholder="Loan Amount"/>
                     </div>
@@ -87,7 +87,7 @@
                         <label class="form-label" for="interestRate">Interest Rate (%)</label>
                         <input class="form-control w-50" id="interestRate" name="interestRate" type="number" placeholder="Interest Rate" />
                     </div>
-                    <div class="col-12 text-end">
+                    <div class="col-12 text-center">
                         <button class="btn btn-primary border-0" id="btnSubmit" type="button" onclick="getValues(this)">
                             Calculate
                         </button>
@@ -97,24 +97,14 @@
 
             <div class="col text-center col-md-8">
                 <h3>Your Monthly Payments:</h3>
-                <h5 id="monthlyPayAmt"></h5>
-                <div class="table-responsive">
-                    <table id="firstTable" class="table mt-2 border-0">
-                        <tbody class="border-top-0">
-                            <tr class=>
-                                <td>Total Principal</td>
-                                <td id="totalPrin">$25,000.00</td>
-                            </tr>
-                            <tr>
-                                <td>Total Interest</td>
-                                <td id="totalInt">$3,306.85</td>
-                            </tr>
-                            <tr>
-                                <td>Total Cost</td>
-                                <td id="totalCost">$28,306.85</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <h5 id="monthlyPayAmt" class="text-success"></h5>
+                <div class="row row-cols-2 fs-5">
+                    <div class="col">Total Principal</div>
+                    <div  id="totalPrin" class="col text-end"></div>
+                    <div class="col">Total Interest</div>
+                    <div id="totalInterest" class="col text-end"></div>
+                    <div class="col">Total Cost</div>
+                    <div id="totalCost" class="col text-end"></div>
                 </div>
             </div>
         </div>
@@ -133,15 +123,8 @@
                                 <th>Balance</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td id="currentmonth"></td>
-                                <td id="monthlyPay"></td>
-                                <td id="principal"></td>
-                                <td id="interest"></td>
-                                <td id="totalInterest"></td>
-                                <td id="remainBalance"></td>
-                            </tr>
+                        <tbody id="loanDataBody">
+                            <!--template here-->
                         </tbody>
                     </table>
                 </div>
@@ -170,6 +153,17 @@
             </div>
         </div>
     </footer>
+
+    <template id="loanDataTemplate">
+        <tr>
+            <td id="currentmonth"></td>
+            <td id="monthlyPay"></td>
+            <td id="principal"></td>
+            <td id="interest"></td>
+            <td id="totalInterest"></td>
+            <td id="remainBalance"></td>
+        </tr>
+    </template>
 
 
     <!--Bootsrap JS-->

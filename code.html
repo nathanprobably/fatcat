@@ -75,27 +75,267 @@
             <div class="col-lg-8">
                 <pre class="line-numbers">
                     <code class="language-js">
-function displayMessage() {
-    //get the text out of our input and assign it to a variable
-    let msg = document.getElementById('message').value;
+//get the values from the user input
+function getValues() {
+    //get the values
+    loanAmount = document.getElementById('loanAmount').value; //<--these are getting the values from the input
 
+    loanTerm = document.getElementById('loanTerm').value;   //<--these are getting the values from the input
 
+    interestRate = document.getElementById('interestRate').value; //<--these are getting the values from the input
 
-    Swal.fire(
-        {
+    //turn them into usable numbers
+    loanAmount = parseInt(loanAmount);//<--these are turning the values into numbers I can use
+    loanTerm = parseInt(loanTerm);
+    interestRate = parseFloat(interestRate);
+
+    //validate the values
+    if (isNaN(loanAmount) || isNaN(loanTerm) ||isNaN(interestRate)
+    || loanAmount <= 0 || loanTerm <=0 || interestRate < 0) {
+        Swal.fire({
+            icon: `error`,
             backdrop: false,
-            title: 'FatCat',
-            text: msg, //<-- replace this with that variable
+            title: `OOPS!`,
+            text: `Please enter valid number for your loan.`
+        });
+    } else { //<--if the numbers aren't NAN...
+        let totals = paymentCalc(loanAmount, loanTerm, interestRate);
+
+        displaySummaryInfo(totals);
+        displayLoanData(totals);
+    }
+}
+
+//calculate the monthly  payments for each month in the term
+function paymentCalc(loanAmount, loanTerm, interestRate) {
+    //calc monthly payment using the given equation
+    let monthlyPay = loanAmount * (interestRate / 1200) / (1 - (1 + interestRate / 1200) ** -loanTerm);
+
+    //make an array to holf the objects when they've been calculated
+    let loan = [];
+
+    //create an object to hold the various calculation elements, starting at 0 because we have yet to look at any specific data in our array, this lets us start at the first in our for loop
+    let loanCalc = {
+        month: 0,
+        monthlyPay: 0,
+        principal: 0,
+        interest: 0,
+        totalPrin: 0,
+        totalInt: 0,
+        balance: loanAmount
+    };
+
+    for (i = 0; i <= loanTerm; i++) { //<--for loop go go through the months and compound the values so that moviing forward the values change as the number of months paid increases
+        if (i > 0) { //<--if the index is above zero, the loop will continue
+            let month = i;
+            let remainingBalance = loan[i - 1].balance; //<-- remaining balance is the balance - 1 month of payments, which compounds as the loop returns each time.
+            let interest = remainingBalance * interestRate / 1200;
+            let principal = monthlyPay - interest;
+            let totalPrin = loan[i - 1].totalPrin + principal;
+            let totalInt = loan[i - 1].totalInt + interest;
+
+            remainingBalance -= principal; //subtracting the principal payment from the remaining balance
+
+            loanCalc = { //<--changing the object values from the 0s above the loop to the new object values from the looping
+                month: month,
+                monthlyPay: monthlyPay,
+                principal: principal,
+                interest: interest,
+                totalPrin: totalPrin,
+                totalInt: totalInt,
+                balance: remainingBalance
+            };
         }
-    );
+
+        loan.push(loanCalc); //<--pushing the objects from loanCalc into the loan array
+    }
+
+    let finalMonth = loan[loanTerm]; //<--final month is the array of the loan with duration of the loan term
+
+    let finalSummary = { //<--makes an object of the summary and the final values from the given loanTerm to put into the summary function later
+        monthlyPay: finalMonth.monthlyPay,
+        totalPrin: finalMonth.totalPrin,
+        totalInt: finalMonth.totalInt,
+        fullLoanAmount: finalMonth.totalPrin + finalMonth.totalInt
+    }
+
+    let fullLoanCalc = { //<--a master object with all the other objects from this loop held within for recalling in my other function
+        loanVars: loanAmount, loanTerm, interestRate,
+        finalSummary: finalSummary,
+        loan: loan
+    }
+
+    return fullLoanCalc;
+}
+
+//creat a table from the template and display the accurate information
+function displayLoanData(loan) {
+let payStuffVar = loan.loan;
+
+    const loanDataBody = document.getElementById('loanDataBody');
+
+    loanDataBody.innerHTML = '';
+
+    for (let i = 1; i < payStuffVar.length; i++) { //<--for loop designed to go through and place items on the table, making sure to do sequential months as well as it adds more rows
+        let loanInfo = payStuffVar[i];
+
+        let tableRow = document.createElement('tr') //<--creates the element for the row in HTML that we will be appending info into
+
+        let month = document.createElement('td'); //<--creates the elements of TD in which we will put each piece of corresponding info
+        month.innerHTML = loanInfo.month.toLocaleString();
+        tableRow.appendChild(month);
+
+        let monthlyPay = document.createElement('td');
+        monthlyPay.innerHTML = 
+        loanInfo.monthlyPay.toLocaleString(`en-us`, { //<--entering this in the LocaleString rounds the number to two decimal places and displays it as a currency value on the page
+            style: 'currency',
+            currency: 'USD'
+        });
+        tableRow.appendChild(monthlyPay);
+
+        let principal = document.createElement('td');
+        principal.innerHTML = 
+        loanInfo.principal.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
+        tableRow.appendChild(principal);
+
+        let interest = document.createElement('td');
+        interest.innerHTML = 
+        loanInfo.interest.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
+        tableRow.appendChild(interest);
+
+        let totalInterest = document.createElement('td');
+        totalInterest.innerHTML = 
+        loanInfo.totalInt.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
+        tableRow.appendChild(totalInterest);
+
+        let remainBalance = document.createElement('td');
+        remainBalance.innerHTML = 
+        loanInfo.balance.toLocaleString(`en-us`, {
+            style: 'currency',
+            currency: 'USD'
+        });
+        tableRow.appendChild(remainBalance);
+
+        loanDataBody.appendChild(tableRow);//<--take all the rows and populate the tbody by appendChild, pushing the rows into the id of the table body
+    }
+    
+}
+
+//display the summary in the top right of the page in the summary section
+function displaySummaryInfo(loan) {
+    let summary = loan.finalSummary;
+
+    let monthlyPayAmt = document.getElementById('monthlyPayAmt');
+    monthlyPayAmt.innerText = 
+    summary.monthlyPay.toLocaleString(`en-us`, {
+        style: 'currency',
+        currency: 'USD'
+    });
+
+    let totalPrin = document.getElementById('totalPrin');
+    totalPrin.innerText = 
+    summary.totalPrin.toLocaleString(`en-us`, {
+        style: 'currency',
+        currency: 'USD'
+    });
+
+    let totalInterest = document.getElementById('totalInterest');
+    totalInterest.innerText = 
+    summary.totalInt.toLocaleString(`en-us`, {
+        style: 'currency',
+        currency: 'USD'
+    });
+
+    let totalCost = document.getElementById('totalCost');
+    totalCost.innerText = 
+    summary.fullLoanAmount.toLocaleString(`en-us`, {
+        style: 'currency',
+        currency: 'USD'
+    });
 }
                     </code>
                 </pre>
             </div>
             <div class="col-lg-4">
-                <p> The code is structured in one function</p>
+                <p> The code is structured in four functions.</p>
                 <p>
-                    <code>displayMessage</code> displays a SweetAlert when the button is pressed.
+                    The first step to running this code is to grab the values from the user input on the app page. This
+                    is where the <code>getValues()</code> function comes in. It takes the input variables from the form
+                    in the top left of the page and turns them into usable numbers in our code with the
+                    <code>parseInt()</code>. However, for the interest rate, because it can often be a decimal, we use
+                    <code>parseFloat()</code> so that we can keep its decimal value.
+                </p>
+                <p>
+                    Then, still within the <code>getValues()</code> function, we must validate the numbers, checking to
+                    be sure they are in fact usable numbers. If they aren't, we display the Sweet Alert, as seen with
+                    <code>Swal.fire()</code>. If they are usable, then we continue on to out other functions that have
+                    been called into this one and are defined below.
+                </p>
+                <p>
+                    Next, we calculate the numbers we need for the table using the <code>paymentCalc()</code> function.
+                    We send our defined variables from the <code>getValues()</code> to use to calculate the rest of the
+                    information for our Loan. We set up an array to push the numbers into, and then we write a
+                    <code>for()</code> loop to calculate the values based on what we are looking for, as defined within
+                    the loop with the variables.
+                </p>
+                <p>
+                    With the variables now holding values, we define the object as <code>loanCalc{...}</code> and push
+                    that into our array, making it easier to access later. We continue on, returning the results, and
+                    ending out loop and calculation.
+                </p>
+                <p>
+                    After we have our calculations, it's time to display the information. There are two functions we
+                    will use to do this, the <code>displayLoanData()</code> for the table at the bottom of our page,
+                    which will show the bulk of our data that we calculated, and the <code>displaySummaryInfo()</code>
+                    function, which will display more targeted information and values in the top-right column of the
+                    page.
+                </p>
+                <p>
+                    In our <code>displayLoanData()</code> function, we will first need to call the specific array of the
+                    loan to use, and then we will begin to build our table, using javascript to shape it, instead of a
+                    template. So, we firt set the <code>innerHTML</code> of the table to <code>''</code> to make sure it
+                    is empty before we fill it, and then we begin our <code>for()</code> loop to cycle through the
+                    information that we may populate our table with it.
+                </p>
+                <p>
+                    We create the table rows with the <code>createElement('tr')</code>, and then as we stray further
+                    down the page, we beging to define each cell of our row, and populate our table with the
+                    information, pushing the info into <code>('td')</code>s by continuing to use the
+                    <code>createElement</code>. We then want that number to display as a readable number in currency, so
+                    we use <code>toLocaleString()</code> and fill the parenthesis with the currect style and format, as
+                    you see on the sections displaying the information.
+                </p>
+                <p>
+                    We will then append the child of <code>remainBalance</code> to the newly defined rows, looping
+                    through to do the same for the entirety of the information until we meet the last element of the
+                    loanTerm.
+                </p>
+                <p>
+                    Finally displaying the information on the table, we move on to the summary area. Less items to
+                    display for sure, but very important, nonetheless. So, for this one, i took a different approach.
+                    Instead of creating a table, I just made some columns, gave the Divs distinct IDs, and got those
+                    elements for use with the <code>getElementById()</code> method. Passing the <code>loan</code>
+                    parameter to the function, this was as simple as defining the summary info from the parameter,
+                    assigning the elements with the correctly called elements from the HTML, and then formatting that
+                    information to reflect that they are of monetary value.
+                </p>
+                <p>
+                    The end step is just to call your display functions into <code>getValues()</code>, make sure that
+                    you have the <code>onClick="getValues()"</code> in your <code>app.HTML</code> page, and then run the
+                    code and see the fruit of our labors come to a satisfying display. All this said, this was a
+                    frustrating challenge for me, personally, but it felt so amazing to finally see the app working. As
+                    always, if you have any questions or want to see my other work, just follow the 'About' link in the
+                    navbar to my portfolio, where you can find my other work linked or a contact form to get in touch
+                    and I can walk you through the code. Thanks for reading!
                 </p>
             </div>
         </div>
